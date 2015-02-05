@@ -1,0 +1,104 @@
+	printf("%s" "%d" ," n: ", n);
+			printf("%s" "%d" ," Temp: ", temp);
+			printf("%s" "%d" ," Add: ", add);
+			printf("%s" "%d" ," Pos: ", pos);
+
+printf("%s" "%d" ," ADD ", (mul * num[i]) );
+
+for(i = p; i>=0; i--) {
+	printf("%d" "%s ", num[i], " ");
+	}
+
+		printf("%d" "%s", i, " Mul\n");
+
+				printf("%s" "%d" ," Pos: ", pos);
+
+
+
+//Rickard Johansson 920918-2279
+
+#include <stdio.h>
+#include <string.h>
+
+#define SIZE	(200)
+
+int		num[SIZE];
+int 	temp_v[SIZE];
+int		add_index = 0;
+int		p = 0;
+int 	pos = 0;
+
+void add(n)
+{
+	int temp  = n % 10;
+	int add = temp_v[add_index] + temp;
+	int memory = 0;
+	pos = add_index;
+
+	// kan fixa så att 10, 100, 1000 är en variabel
+	if(add > 9) {
+		add = add % 10;
+		memory = 1;		
+	} 
+	temp_v[pos] = add;	
+
+	if(n > 9 || memory == 1) {
+		pos = pos + 1;
+		n = n - temp;
+		temp = (n % 100) / 10;
+		add = temp_v[pos] + temp + memory;
+		memory = 0;
+		
+		if(add > 9) {
+			add = add % 10;
+			memory = 1;		
+		}
+		temp_v[pos] = add;
+
+		if(n > 99 || memory == 1) {
+			pos = pos + 1;
+			n = n - (temp * 10);
+			temp = ((n % 1000) / 100);
+			add = temp + memory;
+			temp_v[pos] = add;
+		}
+	}
+}
+
+void mult (int mul)
+{
+	add_index = 0;
+
+	if(p == 0 && num[0] == 0) {
+		add(mul);
+	} else {
+
+		int i = 0;
+		for(i; i <= p; i++) {
+			add(mul * num[i]);
+			add_index = add_index + 1;
+			}
+	}
+	p = pos;
+	
+	int i;
+	for(i = 0; i <= p; i++)
+		num[i] = temp_v[i];	
+	
+	memset(temp_v, 0, SIZE * sizeof(temp_v[0]));
+}
+
+int main(int argc, char *argv[])
+{
+	int n = atoi(argv[1]);
+	int i;
+	for(i = n; i>1; i--) {
+		mult(i);
+	}
+	
+	for(i = p; i>=0; i--) {
+	printf("%d", num[i]);
+	}
+
+	return 0;	
+}
