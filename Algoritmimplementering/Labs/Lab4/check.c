@@ -86,7 +86,7 @@ void* take_out_first(list_t* list)
 
 	if(xfree_list == NULL) {
 		printf("xfree_list NULL, succ läggs till\n");
-		xfree_list->pred = xfree_list->succ = succ;
+		xfree_list->pred = succ;
 			
 	} else {
 
@@ -152,7 +152,7 @@ int main(int ac, char** av)
 	n0 = n;
 
 	head = new_list(NULL);
-	xfree_list = new_list(NULL);
+	xfree_list = NULL;
 
 	printf("check starts\n");
 
