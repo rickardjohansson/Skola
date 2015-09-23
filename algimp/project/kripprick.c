@@ -86,7 +86,7 @@ unsigned long long kripprick(char* aname, char* cname, int seconds)
 	return fm_count;
 }
 
-int fm_elim(int rows, int cols, int a[rows][cols], int* c) {
+int fm_elim(int rows, int cols, int a[rows][cols], int c[rows]) {
 	while(1) {
 		int n1 = 0;
 		int n2 = 0;
@@ -98,45 +98,70 @@ int fm_elim(int rows, int cols, int a[rows][cols], int* c) {
 		int neg[rows][cols];
 		int zero[rows][cols];		
  
-		for (j = 0; j < rows; j++) {
-			int number = a[j][cols - 1];
-			printf("Number %d\n", number);
+		for (i = 0; i < rows; i++) {
+			int number = a[i][cols - 1];
 			if (number > 0) {
-				for (i = 0; i < cols; i++)
-					pos[n1][i] = a[j][i];
+				for (j = 0; j < cols; j++)
+					pos[n1][j] = a[i][j];
 				n1++;
 			}
 			else if (number < 0) {
-				for (i = 0; i < cols; i++)
-					neg[n1][i] = a[j][i];
+				for (j = 0; j < cols; j++)
+					neg[n2][j] = a[i][j];
 				n2++;
 			} else { 
-				for (i = 0; i < cols; i++)
-					zero[n1][i] = a[j][i];
+				for (j = 0; j < cols; j++)
+					zero[n3][j] = a[i][j];
 				n3++;
 			}
 		}
 		
 		int sorted[rows][cols];
 		n2 = n2 + n1;
-		
 		for (i = 0; i < rows; i++) {
 			for (j = 0; j < cols; j++) {
 				if (i < n1) 
 					sorted[i][j] = pos[i][j];
 				else if (i >= n1 && i < n2)
-					sorted[i][j] = neg[i - n1][j - n1];
+					sorted[i][j] = neg[i - n1][j];
 				else 
-					sorted[i][j] = zero[i - n2][j - n2];
+					sorted[i][j] = zero[i - n2][j];
 			}
 		}
-		printf("Sorted\n");
-		for (j = 0; j < rows; j++) {
-			for (i = 0; i < cols; i++) {
-				printf("%d ", sorted[j][i]);
+
+
+		a = sorted;
+		double** b = malloc(rows * sizeof(double*));	
+
+		printf("sorted\n");	
+		for (i = 0; i < rows; i++) {
+			b[i] = malloc(cols * sizeof(double));
+			for (j = 0; j < cols; j++) {
+				b[i][j] = a[i][j];
+				printf("%lf ", b[i][j]);
 			}
 		printf("\n");
 		}
 
+		for (i = 0; i < n2; i++) {
+			c[i] = c[i] / b[i][cols-1];
+			for (j = 0; j < cols - 1; j++) {
+				printf("dividing %lf/%lf\n", b[i][j], b[i][cols-1]);
+				b[i][j] = b[i][j]/b[i][cols-1];						
+			}
+			b[i][cols-1] = 1;
+		}		
+
+				
+		printf("divided\n");	
+		for (i = 0; i < rows; i++) {
+			for (j = 0; j < cols; j++) {
+				printf("%lf ", b[i][j]);
+			}
+		printf("\n");
+		}
+
+		return 0;
 	}
 }
+
